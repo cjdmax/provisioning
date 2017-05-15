@@ -29,6 +29,15 @@ module "dns" {
   hostnames  = "${module.provider.hostnames}"
 }
 
+module "sshfp" {
+  source = "./security/sshfp"
+
+  count      = "${var.hosts}"
+  public_ips = "${module.provider.public_ips}"
+  hostnames  = "${module.provider.hostnames}"
+  domain     = "${var.domain}"
+}
+
 module "swap" {
   source = "./service/swap"
 
