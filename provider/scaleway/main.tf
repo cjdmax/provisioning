@@ -17,7 +17,7 @@ variable "region" {
 
 variable "type" {
   type    = "string"
-  default = "VC1S"
+  default = "C2S"
 }
 
 variable "image" {
@@ -29,6 +29,19 @@ provider "scaleway" {
   organization = "${var.organization}"
   token        = "${var.token}"
   region       = "${var.region}"
+}
+
+resource "scaleway_volume" "gluster" {
+  count = "${var.hosts}"
+  name       = "gluster-${count.index}"
+  size_in_gb = "50"
+  type       = "l_ssd"
+}
+
+resource "scaleway_volume_attachment" "gluster" {
+  count  = "${var.hosts}"
+  volume = "${element(scaleway_volume.gluster.*.id, count.index)}"
+  server = "${element(scaleway_server.host.*.id, count.index)}"
 }
 
 resource "scaleway_server" "host" {
@@ -43,7 +56,7 @@ resource "scaleway_server" "host" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update",
-      "apt-get install -yq apt-transport-https ufw nfs-common",
+      "apt-get install -yq apt-transport-https ufw nfs-common bash",
     ]
   }
 }
