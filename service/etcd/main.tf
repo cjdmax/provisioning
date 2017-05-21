@@ -67,6 +67,7 @@ data "template_file" "etcd-service" {
   }
 }
 
+# the googleapi's URL was acting up, switched to github
 data "template_file" "install" {
   template = "${file("${path.module}/scripts/install.sh")}"
 
