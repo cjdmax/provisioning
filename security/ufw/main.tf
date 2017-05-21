@@ -40,6 +40,8 @@ EOF
   }
 }
 
+# this script does some NBD volume server hunting
+# and also hacks ufw to work well with scaleway
 data "template_file" "ufw" {
   template = "${file("${path.module}/scripts/ufw.sh")}"
 
