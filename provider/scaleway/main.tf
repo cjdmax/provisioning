@@ -31,19 +31,6 @@ provider "scaleway" {
   region       = "${var.region}"
 }
 
-resource "scaleway_volume" "gluster" {
-  count = "${var.hosts}"
-  name       = "gluster-${count.index}"
-  size_in_gb = "50"
-  type       = "l_ssd"
-}
-
-resource "scaleway_volume_attachment" "gluster" {
-  count  = "${var.hosts}"
-  volume = "${element(scaleway_volume.gluster.*.id, count.index)}"
-  server = "${element(scaleway_server.host.*.id, count.index)}"
-}
-
 resource "scaleway_server" "host" {
   name                = "${format(var.hostname_format, count.index + 1)}"
   type                = "${var.type}"
@@ -52,6 +39,12 @@ resource "scaleway_server" "host" {
   dynamic_ip_required = true
 
   count = "${var.hosts}"
+
+  # additional volume besides the normal 50G one we get with the C2S
+  volume { 
+    size_in_gb = 50
+    type       = "l_ssd"
+  }
 
   provisioner "remote-exec" {
     inline = [

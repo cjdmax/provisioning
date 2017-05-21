@@ -8,16 +8,6 @@ module "provider" {
   region          = "${var.scaleway_region}"
 }
 
-/*module "provider" {
-  source = "./provider/digitalocean"
-
-  token           = "${var.digitalocean_token}"
-  ssh_keys        = "${var.digitalocean_ssh_keys}"
-  hosts           = "${var.hosts}"
-  hostname_format = "${var.hostname_format}"
-  region          = "${var.digitalocean_region}"
-}*/
-
 module "dns" {
   source = "./dns/cloudflare"
 
@@ -29,12 +19,19 @@ module "dns" {
   hostnames  = "${module.provider.hostnames}"
 }
 
-module "sshfp" {
+module "sshfpip" {
   source = "./security/sshfp"
 
   count      = "${var.hosts}"
-  public_ips = "${module.provider.public_ips}"
-  hostnames  = "${module.provider.hostnames}"
+  items      = "${module.provider.public_ips}"
+  domain     = "${var.domain}"
+}
+
+module "sshfprec" {
+  source = "./security/sshfp"
+
+  count      = "${var.hosts}"
+  items      = "${formatlist("%s.%s", module.dns.domains, var.domain)}"
   domain     = "${var.domain}"
 }
 
@@ -52,17 +49,6 @@ module "wireguard" {
   connections = "${module.provider.public_ips}"
   private_ips = "${module.provider.private_ips}"
   hostnames   = "${module.provider.hostnames}"
-}
-
-module "firewall" {
-  source = "./security/ufw"
-
-  count                = "${var.hosts}"
-  connections          = "${module.provider.public_ips}"
-  private_interface    = "${module.provider.private_network_interface}"
-  vpn_interface        = "${module.wireguard.vpn_interface}"
-  vpn_port             = "${module.wireguard.vpn_port}"
-  kubernetes_interface = "${module.kubernetes.overlay_interface}"
 }
 
 module "etcd" {
@@ -83,4 +69,15 @@ module "kubernetes" {
   cluster_name   = "${var.domain}"
   vpn_ips        = "${module.wireguard.vpn_ips}"
   etcd_endpoints = "${module.etcd.endpoints}"
+}
+
+module "firewall" {
+  source = "./security/ufw"
+
+  count                = "${var.hosts}"
+  connections          = "${module.provider.public_ips}"
+  private_interface    = "${module.provider.private_network_interface}"
+  vpn_interface        = "${module.wireguard.vpn_interface}"
+  vpn_port             = "${module.wireguard.vpn_port}"
+  kubernetes_interface = "${module.kubernetes.overlay_interface}"
 }
