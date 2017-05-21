@@ -1,3 +1,15 @@
+# TODO
+
+## blockers
+
+* weave doesn't work at present
+
+## changes
+
+* removed DO; ufw has a lot of hacks for SCW now
+* we're now running on C2S, not VC2S so we can feed extra volumes to gluster in the future
+* default cluster is brought up with 50G root volume and 50G gluster volume. This comes out to about EUR 30,- a month, not 10!
+
 # Kubernetes cluster setup automation
 
 > This is part of the Hobby Kube project. Functionality of the modules is described in the [guide](https://github.com/hobby-kube/guide).
@@ -25,13 +37,6 @@ Export the following environment variables depending on the modules you're using
 ```sh
 export TF_VAR_scaleway_organization=<ACCESS_KEY>
 export TF_VAR_scaleway_token=<TOKEN>
-```
-
-#### Using DigitalOcean as provider
-
-```sh
-export TF_VAR_digitalocean_token=<token>
-export TF_VAR_digitalocean_ssh_keys=<keys> # e.g. '["121671", "1714133"]'
 ```
 
 #### Using Cloudflare for DNS entries
