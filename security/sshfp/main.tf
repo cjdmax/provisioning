@@ -1,11 +1,7 @@
 variable "count" {}
 
-variable "public_ips" {
+variable "items" {
   type = "list"
-}
-
-variable "hostnames" { 
-	type = "list"
 }
 
 variable "domain" {
@@ -17,11 +13,11 @@ resource "null_resource" "sshfp" {
 	count = "${var.count}"
 	
 	provisioner "local-exec" {
-		command = "ssh-keygen -f \"$HOME/.ssh/known_hosts\" -R ${element(var.public_ips,count.index)}"
+		command = "ssh-keygen -f \"$HOME/.ssh/known_hosts\" -R ${element(var.items,count.index)}"
 	}
 	
 	provisioner "local-exec" {
-		command = "ssh-keyscan -H ${element(var.hostnames,count.index)}.${var.domain},${element(var.public_ips,count.index)} >> \"$HOME/.ssh/known_hosts\""
+		command = "ssh-keyscan -H ${element(var.items,count.index)}} >> \"$HOME/.ssh/known_hosts\""
 	}
 }
 
