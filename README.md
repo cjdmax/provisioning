@@ -2,19 +2,32 @@
 
 ## blockers
 
-* weave doesn't work at present
-
 ## changes
 
 * removed DO; ufw has a lot of hacks for SCW now
 * we're now running on C2S, not VC2S so we can feed extra volumes to gluster in the future
 * default cluster is brought up with 50G root volume and 50G gluster volume. This comes out to about EUR 30,- a month, not 10!
+* some small tweaks to make our cluster ready for gluster
+
+## gluster steps
+
+* you can use https://github.com/gluster/gluster-kubernetes to set up your gluster env
+  * fill in your topology.json: hostnames as in kubectl, storage as in wireguard wg0 IP addresses, devices e.g. /dev/nbd1
+  * you will need to change the glusterfs-daemonset to tolerate running on the kube-master; in my opinion this is not a huge deal; we've got 4cores, 8GB on this master, not the 2core 2GB as on the VC1S
+    ```
+          tolerations:
+          - key: node-role.kubernetes.io/master
+            operator: Equal
+            effect: NoSchedule
+    ```
+
+
 
 # Kubernetes cluster setup automation
 
 > This is part of the Hobby Kube project. Functionality of the modules is described in the [guide](https://github.com/hobby-kube/guide).
 
-Deploy a secure Kubernetes cluster on [Scaleway](https://www.scaleway.com/) or [DigitalOcean](https://www.digitalocean.com/) using [Terraform](https://www.terraform.io/).
+Deploy a secure Kubernetes cluster on [Scaleway](https://www.scaleway.com/) using [Terraform](https://www.terraform.io/).
 
 ## Setup
 

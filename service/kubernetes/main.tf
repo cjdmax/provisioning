@@ -25,6 +25,7 @@ resource "null_resource" "kubernetes" {
     inline = [
       "apt-get install -qy jq",
       "modprobe br_netfilter && echo br_netfilter >> /etc/modules",
+      "modprobe dm_thin_pool && echo dm_thin_pool >> /etc/modules",
     ]
   }
 

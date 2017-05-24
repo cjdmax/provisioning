@@ -49,7 +49,7 @@ resource "scaleway_server" "host" {
   provisioner "remote-exec" {
     inline = [
       "apt-get update",
-      "apt-get install -yq apt-transport-https ufw nfs-common bash",
+      "apt-get install -yq apt-transport-https ufw lvm2 glusterfs-client nfs-common bash",
     ]
   }
 }
