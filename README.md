@@ -15,7 +15,7 @@
 
 ## gluster steps
 
-* you can use https://github.com/gluster/gluster-kubernetes to set up your gluster env
+* you can use [gluster-kubernetes](https://github.com/gluster/gluster-kubernetes) to set up your gluster env
   * fill in your topology.json: hostnames as in kubectl, storage as in wireguard wg0 IP addresses, devices e.g. /dev/nbd1
   * you will need to change the glusterfs-daemonset to tolerate running on the kube-master; in my opinion this is not a huge deal; we've got 4cores, 8GB on this master, not the 2core 2GB as on the VC1S
     ```
@@ -24,6 +24,11 @@
             operator: Equal
             effect: NoSchedule
     ```
+  * it may not be immediately apparent to you that the gluster-kubernetes './gk-deploy' script must be executed on the kubernetes nodes themselves; this is because heketi-cli is connecting to internal ClusterIP's to deploy. 
+    * [PR 155](https://github.com/gluster/gluster-kubernetes/pull/155) is not yet merged, uses ansible to deploy on our existing SCW cluster
+    * [PR 168](https://github.com/gluster/gluster-kubernetes/pull/168) was closed, but is valid **except if you need to run the glusterfs-daemonset on your master was well, as above.** If you have a non-storage master, this should suit you, though.
+    * you'll need heketi-cli and a working kubectl on the node you execute gk-deploy
+
 
 
 
