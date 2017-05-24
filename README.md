@@ -2,6 +2,10 @@
 
 ## blockers
 
+## caveats
+
+* if scaleway is slow, weave may not bootstrap correctly perhaps? If your slave nodes stay 'NotReady' and weave pods are bellyaching, try again, perhaps when scaleway is less busy?
+
 ## changes
 
 * removed DO; ufw has a lot of hacks for SCW now
