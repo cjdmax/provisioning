@@ -29,6 +29,8 @@
     * [PR 168](https://github.com/gluster/gluster-kubernetes/pull/168) was closed, but is valid **except if you need to run the glusterfs-daemonset on your master was well, as above.** If you have a non-storage master, this should suit you, though.
     * you'll need heketi-cli and a working kubectl on the node you execute gk-deploy
 
+    * if the heketi pod is acting up with read only DB's, please note that the old pod may not have released its mount on the specific node it was running on. make sure to schedule the pod on this specific node, or give up and always schedule the heketi pod on the master node just like you're doing for your ingress controller
+
 
 
 
