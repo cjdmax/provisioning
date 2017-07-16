@@ -5,6 +5,8 @@
 ## caveats
 
 * if scaleway is slow, weave may not bootstrap correctly perhaps? If your slave nodes stay 'NotReady' and weave pods are bellyaching, try again, perhaps when scaleway is less busy?
+* terraform =< 0.8.6 for some reason
+* kubernetes 1.6.x max, kubeadm 1.7.x breaks on https://github.com/kubernetes/kubeadm/issues/345
 
 ## changes
 
